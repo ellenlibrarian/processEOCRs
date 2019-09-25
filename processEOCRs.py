@@ -19,9 +19,11 @@ def extractRecords():
 
 def extractPOs():
     nowname = "0"
+    count = 0
     with open(fname, "rb") as fh:
         reader = MARCReader(fh)
         for record in reader:
+            count = count + 1
             try :
                 newname = record['961']['a']
                 if newname != nowname :
@@ -31,6 +33,8 @@ def extractPOs():
             except :
                 with open("UL___POs-" + str(shortdate) + ".txt", "a") as fout:
                     fout.write("***PO missing from record*** Record written to UL___POs-" + str(shortdate) + ".txt" + "\n")
+        with open("UL___POs-" + str(shortdate) + ".txt", "a") as fout:
+                fout.write("\nTotal records: " + str(count) + "\n")
 
 from pymarc import MARCReader
 from datetime import date
@@ -38,5 +42,6 @@ from datetime import date
 fname = input("Enter file name: ")
 today = date.today()
 shortdate = today.strftime("%m-%d-%y")
+
 extractRecords()
 extractPOs()
